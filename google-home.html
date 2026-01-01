@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Style Search with Tabs & Favorites</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    img {
+      width: 272px;
+      margin-bottom: 24px;
+    }
+
+    form {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    input[type="text"] {
+      width: 400px;
+      padding: 10px 16px;
+      border: 1px solid #ccc;
+      border-radius: 24px;
+      outline: none;
+      font-size: 16px;
+      transition: box-shadow 0.2s ease-in-out;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 5px rgba(66, 133, 244, 0.5);
+      border-color: #4285f4;
+    }
+
+    input[type="submit"] {
+      margin-left: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 24px;
+      background-color: #4285f4;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #3367d6;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 24px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #5f6368;
+    }
+
+    .tab {
+      cursor: pointer;
+      padding-bottom: 5px;
+      transition: color 0.2s ease-in-out;
+    }
+
+    .tab.active {
+      border-bottom: 2px solid #4285f4;
+      color: #4285f4;
+      font-weight: 500;
+    }
+
+    .tab:hover {
+      color: #1a73e8;
+    }
+
+    /* FAVORITES SECTION */
+    .favorites {
+      margin-top: 30px;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .favorite {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #202124;
+      font-size: 14px;
+    }
+
+    .favorite img {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      margin-bottom: 6px;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .favorite img:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Logo -->
+  <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo" />
+
+  <!-- Search Form -->
+  <form id="searchForm" action="https://www.google.com/search" method="get">
+    <input id="searchInput" type="text" name="q" placeholder="Search Google..." />
+    <input type="submit" value="Search" />
+  </form>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" data-type="all">All</div>
+    <div class="tab" data-type="images">Images</div>
+    <div class="tab" data-type="videos">Videos</div>
+    <div class="tab" data-type="news">News</div>
+    <div class="tab" data-type="maps">Maps</div>
+    <div class="tab" data-type="shopping">Shopping</div>
+  </div>
+
+  <!-- Favorites Section -->
+  <div class="favorites">
+    <a href="https://www.youtube.com" class="favorite" target="_blank">
+      <img src="https://www.google.com/s2/favicons?sz=64&domain=youtube.com" alt="YouTube" />
+      YouTube
+    </a>
+    <a href="https://mail.google.com" class="favorite" target="_blank">
+      <img src="https://www.google.com/s2/favicons?sz=64&domain=mail.google.com" alt="Gmail" />
+      Gmail
+    </a>
+    <a href="https://www.facebook.com" class="favorite" target="_blank">
+      <img src="https://www.google.com/s2/favicons?sz=64&domain=facebook.com" alt="Facebook" />
+      Facebook
+    </a>
+    <a href="https://www.amazon.com" class="favorite" target="_blank">
+      <img src="https://www.google.com/s2/favicons?sz=64&domain=amazon.com" alt="Amazon" />
+      Amazon
+    </a>
+    <a href="https://www.twitter.com" class="favorite" target="_blank">
+      <img src="https://www.google.com/s2/favicons?sz=64&domain=twitter.com" alt="Twitter" />
+      Twitter
+    </a>
+    <a href="https://www.reddit.com" class="favorite" target="_blank">
+      <img src="https://www.google.com/s2/favicons?sz=64&domain=reddit.com" alt="Reddit" />
+      Reddit
+    </a>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('searchInput');
+    let currentType = 'all';
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentType = tab.dataset.type;
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const query = encodeURIComponent(input.value.trim());
+      if (!query) return;
+
+      let url = 'https://www.google.com/search?q=' + query;
+
+      switch (currentType) {
+        case 'images': url = 'https://www.google.com/search?tbm=isch&q=' + query; break;
+        case 'videos': url = 'https://www.google.com/search?tbm=vid&q=' + query; break;
+        case 'news': url = 'https://www.google.com/search?tbm=nws&q=' + query; break;
+        case 'maps': url = 'https://www.google.com/maps/search/' + query; break;
+        case 'shopping': url = 'https://www.google.com/search?tbm=shop&q=' + query; break;
+      }
+
+      window.open(url, '_blank');
+    });
+  </script>
+</body>
+</html>
